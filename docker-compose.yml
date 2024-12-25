@@ -1,29 +1,53 @@
 services:
-  app:
-    build:
-      context: .
-    container_name: rails_app
-    command: bash -c "rm -f tmp/pids/server.pid && bundle install && rails server -b 0.0.0.0"
-    volumes:
-      - .:/app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/todo_list_development
-
-  db:
+  postgres_db:
     image: postgres:15
     container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo_list_development
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: todo_list_production
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d todo_list_production -h localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+  app:
+    build:
+      context: .
+    container_name: rails_app
+    # command: "./bin/rails db:migrate"
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: test
+      POSTGRES_HOST: postgres_db
+      POSTGRES_USER: postgres
+      DATABASE_PASSWORD: postgres
+      POSTGRES_DB: todo_list_production
+      POSTGRES_PORT: 5432
+      BUNDLE_WITHOUT: ""
+    volumes:
+      - .:/rails:cached
+      - rails_cache:/rails/tmp/cache
+      - rails_logs:/rails/log
+    networks:
+      - app_network  
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+
+
+networks:
+  app_network:
+    driver: bridge
 
 volumes:
   pg_data:  
+  rails_cache:
+  rails_logs:

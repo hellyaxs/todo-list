@@ -28,35 +28,44 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 ## 🌐 starting application commands
 
-###  initial settings
-1. Make sure you have Ruby 3.0+ installed:
+### initial settings
+1.Make sure you have Ruby 3.0+ installed:
+
 ```bash
    ruby -v
 ```
-2. install bundler
+
+2.install bundler
+
 ```bash
     gem install bundler
 ```
 
-3. install rails
+3.install rails
+
 ```bash
     gem install rails && rails -v
 ```
+
 ### starting application
-1. clone repository
+1.clone repository
+
 ```bash
    git clone <rep> && cd todo-list
 ```
-2. install the dependencies
+
+2.install the dependencies
+
 ```bash
    bundle install
 ```
-3. rising application
+
+3.rising application
+
 ```bash
    rails server
    #returns information about the application
 ```
-
 
 ## ☕ [link para demo]()
 
