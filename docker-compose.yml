@@ -19,7 +19,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./back-end
     container_name: rails_app
     # command: "./bin/rails db:migrate"
     ports:
