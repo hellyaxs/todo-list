@@ -57,6 +57,15 @@ class ApiService {
       }
     }
 
+    async updateList(id, nome) {
+      try {
+        const response = await this.api.put(`/listas/${id}`, { nome });
+      } catch (error) {
+        console.error('Erro ao deletar lista:', error);
+        throw error;
+      }
+    }
+
     
   }
 
