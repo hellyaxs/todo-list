@@ -1,34 +1,38 @@
 "use client";
 import { useEffect, useState } from "react";
 import Item from "./components/item";
-import  ApiService  from "./services/lista-todos";
+import  ApiService  from "./services/lista_service";
+
 
 export default function Home() {
   const apiService = new ApiService();
-
-  useEffect(() => {
-    const fetchLists = async () => {
-      try {
-        const data = await apiService.getLists();
-        setListas(data);
-      } catch (error) {
-        console.error('Erro ao buscar listas:', error);
-      }
-    };
-    fetchLists();
-  }, [apiService]);
-
-
-
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState("");
+ 
+  const fetchLists = async () => {
+    try {
+      const data = await apiService.getLists();
+      setLists(data);
+    } catch (error) {
+      console.error('Erro ao buscar listas:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLists();
+  }, []);
+
 
   const addList = () => {
     if (newListName.trim() !== "") {
-      setLists([...lists, { id: Date.now(), name: newListName }]);
+      const novalista = apiService.createList(newListName);
+      setLists([...lists, novalista]);
       setNewListName(""); 
+      fetchLists();
+      console.log(lists);
     }
   };
+
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -54,8 +58,9 @@ export default function Home() {
         {lists.map((list) => (
           <Item 
             key={list.id}
+            idLista={list.id}
             className="border-2 border-purple-500 rounded-lg p-4 text-center"
-            title={list.name}
+            title={list.nome}
           >
           </Item>
         ))}
