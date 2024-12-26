@@ -1,34 +1,36 @@
 "use client";
 import { useEffect, useState } from "react";
 import Item from "./components/item";
-import  ApiService  from "./services/lista_service";
+import  instance  from "./services/lista_service";
 
 
 export default function Home() {
-  const apiService = new ApiService();
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState("");
  
-  const fetchLists = async () => {
-    try {
-      const data = await apiService.getLists();
-      setLists(data);
-    } catch (error) {
-      console.error('Erro ao buscar listas:', error);
-    }
-  };
+  // const fetchLists = async () => {
+  //   try {
+  //     await instance.getLists();
+  //     setLists(instance.listasdeTareas);
+  //   } catch (error) {
+  //     console.error('Erro ao buscar listas:', error);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchLists();
+    const handleUpdate = (newListas) => setLists(newListas);
+
+    instance.subscribe(handleUpdate); // Assina as mudanças
+    instance.getLists(); // Carrega os dados iniciais
   }, []);
 
 
   const addList = () => {
     if (newListName.trim() !== "") {
-      const novalista = apiService.createList(newListName);
+      const novalista = instance.createList(newListName);
       setLists([...lists, novalista]);
       setNewListName(""); 
-      fetchLists();
+      instance.getLists();
       console.log(lists);
     }
   };
@@ -55,9 +57,9 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white p-5">
       
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {lists.map((list) => (
+        {lists.map((list,index) => (
           <Item 
-            key={list.id}
+            key={index}
             idLista={list.id}
             className="border-2 border-purple-500 rounded-lg p-4 text-center"
             title={list.nome}

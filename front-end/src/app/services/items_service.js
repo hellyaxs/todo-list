@@ -14,7 +14,9 @@ class ItemService {
     async getItemsOfList(id) {
       try {
         const response = await this.api.get(`/listas/${id}/itens`);
-        return response.data.sort((a, b) => a.id - b.id);;
+        console.log(response.data);
+        console.log("id: ",id);
+        return response.data.sort((a, b) => a.id - b.id);
       } catch (error) {
         console.error('Erro ao buscar listas:', error);
         throw error;
@@ -23,7 +25,14 @@ class ItemService {
   
     async createItem(id,{ nome, checked, description }) {
       try {
-        const response = await this.api.post(`/listas/${id}/itens`, { nome, checked, description });
+        const response = await this.api.post(`/listas/${id}/itens`, 
+            { "item": {
+                    "titulo": nome, 
+                    "check": checked, 
+                    "descricao_breve": description, 
+                    "lista_id": id 
+                    }
+            });
         return response.data;
       } catch (error) {
         console.error('Erro ao criar lista:', error);
@@ -43,6 +52,7 @@ class ItemService {
   
     // Adicione outros métodos conforme necessário
   }
-  
+
+const instanceItemService = new ItemService();
 export default ItemService;
 

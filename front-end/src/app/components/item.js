@@ -1,10 +1,10 @@
 import React, { useEffect,useState } from "react";
-import ApiService from "../services/lista_service";
+import instance from "../services/lista_service";
 import ItemService from "../services/items_service";
 
 export default function Item({ idLista ,title }) {
-      const apiService = new ApiService();
-      const itemService = new ItemService();
+      const apiService = instance;
+      const apiServiceItem = new ItemService();
 
       const [tasks, setTasks] = useState([]);
       const [isAddingTask, setIsAddingTask] = useState(false); // Controla se o input está visível
@@ -14,8 +14,9 @@ export default function Item({ idLista ,title }) {
         if (newTaskTitle.trim() !== "") {
           setTasks([
             ...tasks,
-            { id: Date.now(), title: newTaskTitle, description: "description" },
+            { titulo: newTaskTitle, descricao_breve: "description" },
           ]);
+          apiServiceItem.createItem(idLista, { nome: newTaskTitle, checked: false, description: "description" });
           setNewTaskTitle(""); // Limpa o campo
           setIsAddingTask(false); // Fecha o campo
         }
@@ -23,7 +24,8 @@ export default function Item({ idLista ,title }) {
 
     const fetchItens = async () => {
         try {
-          const data = await itemService.getItemsOfList(idLista);
+          const data = await apiServiceItem.getItemsOfList(idLista);
+          data.lista_id = idLista ? setTasks(data) : setTasks([]);
           setTasks(data);
         } catch (error) {
           console.error('Erro ao buscar listas:', error);
@@ -37,6 +39,7 @@ export default function Item({ idLista ,title }) {
 
     const deleteList = () => {
         apiService.deleteList(idLista);
+
     }
 
     return (
@@ -94,6 +97,7 @@ export default function Item({ idLista ,title }) {
             type="text"
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && addTask()}
             placeholder="New Task Title"
             className="flex-1 border rounded px-2 py-1 text-black"
           />
