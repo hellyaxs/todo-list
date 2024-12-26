@@ -67,3 +67,4 @@ group :test do
 end
 
 gem "bindex", "~> 0.8.0"
+gem 'rack-cors'
