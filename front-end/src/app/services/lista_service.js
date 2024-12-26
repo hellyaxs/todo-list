@@ -10,22 +10,11 @@ class ApiService {
       this.listasdeTareas = [];
       this.subscribers = [];
       this.api = axios.create({
-        baseURL:"http://localhost:3000",
+        baseURL:baseURL,
         httpsAgent: new (require("https").Agent)({ rejectUnauthorized: false }),
       });
     }
 
-
-  /**
-   * @typedef {Object} Lista
-   * @property {number} id - O ID da lista.
-   * @property {string} nome - O nome da lista.
-   */
-
-  /**
-   * Busca as listas da API.
-   * @returns {Promise<Lista[]>} Retorna uma promise com um array de objetos do tipo Lista.
-   */
     async getLists() {
       try {
         const response = await this.api.get('/listas');

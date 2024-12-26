@@ -6,8 +6,8 @@ export default function Item({ idLista ,title }) {
       const apiService = instance;
       const apiServiceItem = new ItemService();
 
-      const [tasks, setTasks] = useState([]);
-      const [isAddingTask, setIsAddingTask] = useState(false); // Controla se o input está visível
+      let [tasks, setTasks] = useState([]);
+      const [isAddingTask, setIsAddingTask] = useState(false); 
       const [newTaskTitle, setNewTaskTitle] = useState("");
     
       const addTask = () => {
@@ -17,16 +17,20 @@ export default function Item({ idLista ,title }) {
             { titulo: newTaskTitle, descricao_breve: "description" },
           ]);
           apiServiceItem.createItem(idLista, { nome: newTaskTitle, checked: false, description: "description" });
-          setNewTaskTitle(""); // Limpa o campo
-          setIsAddingTask(false); // Fecha o campo
+          setNewTaskTitle(""); 
+          setIsAddingTask(false);
         }
     }
 
     const fetchItens = async () => {
         try {
           const data = await apiServiceItem.getItemsOfList(idLista);
-          data.lista_id = idLista ? setTasks(data) : setTasks([]);
-          setTasks(data);
+          console.log(data);
+          data.forEach(element => {
+             if(element.lista_id == idLista){
+               setTasks(data)
+             }
+          });
         } catch (error) {
           console.error('Erro ao buscar listas:', error);
         }
@@ -39,8 +43,14 @@ export default function Item({ idLista ,title }) {
 
     const deleteList = () => {
         apiService.deleteList(idLista);
-
     }
+
+    const updateItem = (e,item) => {
+      const updatedTask = tasks.map((task) =>
+      task.id === item.id ? { ...task, check: e.target.checked } : task);
+      setTasks(updatedTask);
+      apiServiceItem.updateItem(idLista, item.id, { nome: item.titulo, checked: e.target.checked, description: item.descricao_breve });
+    };
 
     return (
     <> 
@@ -63,18 +73,22 @@ export default function Item({ idLista ,title }) {
    </div>
    <div className="flow-root">
         <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-            {tasks.map((item, index) => (
-            <li key={index} className="py-3 sm:py-4">
+            {tasks.map((item,index) => (
+            <li key={index+"-"+item.id} className="py-3 sm:py-4">
                 <div className="flex items-center">
                     <div className="flex-shrink-0">
-                    <label className="flex items-center cursor-pointer relative">
-                        <input value={item.check} type="checkbox" className="peer h-6 w-6 cursor-pointer transition-all appearance-none rounded-full bg-slate-100 shadow hover:shadow-md border border-slate-300 checked:bg-green-400 checked:border-green-400" id="check-custom-style" />
-                        <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" strokeWidth="1">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" ></path>
-                        </svg>
-                        </span>
-                    </label>
+                      <label className="flex items-center cursor-pointer relative">
+                        <input 
+                        checked={item.check}
+                        onChange={(e) => updateItem(e, item)} 
+                        id={`check-${item.id}`} type="checkbox" 
+                         className="peer h-6 w-6 cursor-pointer transition-all appearance-none rounded-full bg-slate-100 shadow hover:shadow-md border border-slate-300 checked:bg-green-400 checked:border-green-400" />
+                            <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" strokeWidth="1">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" ></path>
+                              </svg>
+                            </span>
+                      </label>
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
