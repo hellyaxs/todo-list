@@ -24,6 +24,12 @@ export default function Home() {
       instance.getLists();
     }
   };
+  
+  const orderListAZ = () => {
+    const ordenada = [...lists].sort((a, b) => a.nome.localeCompare(b.nome));
+    setLists(ordenada);
+  }
+
 
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -45,6 +51,16 @@ export default function Home() {
   
         {lists.length !== 0 && (
           <div className="min-h-screen bg-slate-900 rounded-2xl text-white p-5">
+            <div className="flex justify-end items-stretch font-bold mb-4">
+             <button onClick={orderListAZ} 
+              className="flex justify-end bg-purple-700 rounded-3xl p-1.5 text-white hover:bg-purple-600 transitionbg-slate-800 border border-transparent text-center text-sm  transition-all shadow-sm hover:shadow focus:shadow-none  active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+               <span className="mx-1 mt-0.5" >A-Z</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+               <path fillRule="evenodd" d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z" clipRule="evenodd" />
+              </svg>
+             </button>
+             
+            </div>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {lists.map((list,index) => (
               <Item 
