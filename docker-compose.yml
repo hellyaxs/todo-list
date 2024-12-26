@@ -3,9 +3,9 @@ services:
     image: postgres:15
     container_name: postgres_db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo_list_production
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
@@ -22,31 +22,28 @@ services:
       context: ./front-end
     container_name: react_app
     ports:
-      - "3001:3000"
+      - "3000:3000"
     networks:
       - app_network
     depends_on:
-      - backend
+      - rails_app
     environment:
-      NEXT_PUBLIC_API_URL: http://rails_app:3000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
 
-  backend:
+  rails_app:
     build:
       context: ./back-end
     container_name: rails_app
-    # command: "./bin/rails db:migrate"
-    ports:
-      - "3000:3000"
     environment:
       RAILS_ENV: test
-      POSTGRES_HOST: postgres_db
-      POSTGRES_USER: postgres
-      DATABASE_PASSWORD: postgres
-      POSTGRES_DB: todo_list_production
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
       BUNDLE_WITHOUT: ""
     volumes:
-      - .:/rails:cached
+      - ./back-end:/rails:cached
       - rails_cache:/rails/tmp/cache
       - rails_logs:/rails/log
     networks:
@@ -54,6 +51,10 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
+    command: >
+      bash -c "
+      bundle exec rails db:migrate &&
+      ./bin/rails server -b 0.0.0.0"    
 
 
 networks:
