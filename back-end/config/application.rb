@@ -23,7 +23,8 @@ module TodoList
         origins '*' # Substitua pelo domínio do frontend, ex.: 'http://localhost:3000'
         resource '*',
                 headers: :any,
-                methods: [:get, :post, :put, :patch, :delete, :options, :head]
+                methods: [:get, :post, :put, :patch, :delete, :options, :head],
+                credentials: false
       end
     end
     # Configuration for the application, engines, and railties goes here.
