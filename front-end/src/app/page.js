@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import Item from "./components/item";
 import  instance  from "./services/lista_service";
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+console.log(baseURL);
 
 export default function Home() {
   const [lists, setLists] = useState([]);
