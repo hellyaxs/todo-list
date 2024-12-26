@@ -3,7 +3,8 @@ class ItensController < ActionController::API
 
   # GET /itens
   def index
-    @itens = Item.all
+    lista_id = params[:lista_id] # Obtém o ID da lista da URL
+    @itens = Item.where(lista_id: lista_id)
     render json: @itens
   end
 
