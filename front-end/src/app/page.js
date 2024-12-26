@@ -12,13 +12,13 @@ export default function Home() {
   useEffect(() => {
     const handleUpdate = (newListas) => setLists(newListas);
     instance.subscribe(handleUpdate); 
-    instance.getLists(); 
+    instance.getLists().then((data) => setLists(data));
   }, []);
 
 
-  const addList = () => {
+  const addList = async () =>  {
     if (newListName.trim() !== "") {
-      const novalista = instance.createList(newListName);
+      const novalista = await instance.createList(newListName);
       setLists([...lists, novalista]);
       setNewListName(""); 
       instance.getLists();
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-      <h1 className="text-center text-2xl font-bold ">Nova Lista de Tarefas</h1>
+      <h1 className="text-center text-3xl font-bold">Nova Lista de Tarefas</h1>
    
       <div className="w-full min-w-96 mt-4 relative">
         <input
@@ -48,7 +48,7 @@ export default function Home() {
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {lists.map((list,index) => (
               <Item 
-                key={index}
+                key={list.id}
                 idLista={list.id}
                 className="border-2 border-purple-500 rounded-lg p-4 text-center"
                 title={list.nome} />
