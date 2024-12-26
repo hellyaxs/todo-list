@@ -45,18 +45,20 @@ export default function Home() {
           </button>
       </div>
   
-
-        <div className="min-h-screen bg-black text-white p-5">
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {lists.map((list,index) => (
-                <Item 
-                  key={index}
-                  idLista={list.id}
-                  className="border-2 border-purple-500 rounded-lg p-4 text-center"
-                  title={list.nome} />
-              ))}
-            </div>
+        {lists.length !== 0 && (
+          <div className="min-h-screen bg-slate-900 rounded-2xl text-white p-5">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {lists.map((list,index) => (
+              <Item 
+                key={index}
+                idLista={list.id}
+                className="border-2 border-purple-500 rounded-lg p-4 text-center"
+                title={list.nome} />
+            ))}
+          </div>
         </div>
+        )}
+       
 
       </main>
     </div>
