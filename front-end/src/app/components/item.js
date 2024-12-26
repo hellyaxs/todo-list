@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect,useState } from "react";
 import instance from "../services/lista_service";
 import ItemService from "../services/items_service";
@@ -14,7 +15,7 @@ export default function Item({ idLista ,title }) {
         if (newTaskTitle.trim() !== "") {
           setTasks([
             ...tasks,
-            { titulo: newTaskTitle, descricao_breve: "description" },
+            { titulo: newTaskTitle, check: false, descricao_breve: "description" },
           ]);
           apiServiceItem.createItem(idLista, { nome: newTaskTitle, checked: false, description: "description" });
           setNewTaskTitle(""); 
@@ -25,12 +26,7 @@ export default function Item({ idLista ,title }) {
     const fetchItens = async () => {
         try {
           const data = await apiServiceItem.getItemsOfList(idLista);
-          console.log(data);
-          data.forEach(element => {
-             if(element.lista_id == idLista){
-               setTasks(data)
-             }
-          });
+          setTasks(data)
         } catch (error) {
           console.error('Erro ao buscar listas:', error);
         }
