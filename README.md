@@ -6,7 +6,7 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/iuricode/README-template?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/iuricode/README-template?style=for-the-badge)
 
-> App para gerenciar tarefas feito em ruby on rails
+> ☕ App para gerenciar tarefas feito em ruby on rails   [link para demo]()
 
 ### 📝 Ajustes e melhorias
 
@@ -15,8 +15,10 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [ ] Componentizar elementos mais basicos
 
 #### ⚙️ Technical requirements 
-- **Ruby**: Versão 3.0 ou superior 
-- **Rails**: Versão 7.0 ou superior
+- **Ruby**: Versão 3.2 ou superior 
+- **Rails**: Versão 7.1 ou superior
+- **postgres**: Versão 14 ou superior
+- **Versão do Nodejs**: Versão 18 ou superior
 
 ## 💻 Pré-requisitos
 
@@ -28,30 +30,21 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 ## 🌐 starting application commands
 
-### initial settings
-1.Make sure you have Ruby 3.0+ installed:
-
 ```bash
-   ruby -v
+   git clone https://github.com/hellyaxs/todo-list.git && cd todo-list
 ```
 
-2.install bundler
+## starting application with docker-compose
 
 ```bash
-    gem install bundler
+   docker-compose up
 ```
 
-3.install rails
+### initial settings back-end
+1. inside diretory backend
 
 ```bash
-    gem install rails && rails -v
-```
-
-### starting application
-1.clone repository
-
-```bash
-   git clone <rep> && cd todo-list
+   cd back-end
 ```
 
 2.install the dependencies
@@ -63,11 +56,24 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 3.rising application
 
 ```bash
-   rails server
-   #returns information about the application
+   rails db:migrate && rails server
 ```
 
-## ☕ [link para demo]()
+### initial settings front-end
+
+2.install the dependencies
+
+```bash
+   npm install
+```
+
+3.build e start application
+
+```bash
+   npm run build && npm run start
+```
+
+
 
 ## 📫 Contribuindo
 
