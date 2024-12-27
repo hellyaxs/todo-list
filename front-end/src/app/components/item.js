@@ -8,7 +8,7 @@ export default function Item({ idLista ,title }) {
       const apiServiceItem = new ItemService();
 
       let [tasks, setTasks] = useState([]);
-      const [isAddingTask, setIsAddingTask] = useState(false);
+      const [isAddingTask, setIsAddingTask] = useState("");
       const [editList, setEditList] = useState(false);
       const [newTaskTitle, setNewTaskTitle] = useState("");
       const [description, setDescription] = useState("");
@@ -18,11 +18,12 @@ export default function Item({ idLista ,title }) {
         if (newTaskTitle.trim() !== "") {
           setTasks([
             ...tasks,
-            { titulo: newTaskTitle, check: false, descricao_breve: "description" },
+            { titulo: newTaskTitle, check: false, descricao_breve: description },
           ]);
-          apiServiceItem.createItem(idLista, { nome: newTaskTitle, checked: false, description: "description" });
+          apiServiceItem.createItem(idLista, { nome: newTaskTitle, checked: false, description: description });
           setNewTaskTitle(""); 
-          setIsAddingTask(false);
+          setDescription("");
+          setIsAddingTask("");
         }
     }
     const handleEditListTitle = () => {
@@ -139,14 +140,13 @@ export default function Item({ idLista ,title }) {
     
         </ul>
    </div>
-   {isAddingTask ? (
-        <div className="flex items-center gap-2 mt-4">
+   {isAddingTask === "des" && (<div className="flex items-center gap-2 mt-4">
           <input
             type="text"
-            value={newTaskTitle}
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" ? addTask() : e.key === "Escape" && setIsAddingTask(false)}
-            placeholder="New Task Title"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" ? addTask() : e.key === "Escape" && setIsAddingTask("")}
+            placeholder="Descrição"
             className="flex-1 border rounded px-2 py-1 text-black"
           />
           <button
@@ -155,10 +155,29 @@ export default function Item({ idLista ,title }) {
           >
             Add
           </button>
+    </div>
+  )}
+   {isAddingTask === "title" ? (
+        <div className="flex items-center gap-2 mt-4">
+          <input
+            type="text"
+            value={newTaskTitle}
+            onChange={(e) => setNewTaskTitle(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" ? setIsAddingTask("des") : e.key === "Escape" && setIsAddingTask("")}
+            placeholder="Nova Tarefa"
+            className="flex-1 border rounded px-2 py-1 text-black"
+          />
+          <button
+            onClick={() => setIsAddingTask("des")}
+            className="bg-purple-500 px-3 py-1 rounded text-white hover:bg-purple-600 transition"
+          >
+            Add
+          </button>
         </div>
-      ) : (
+      ) :
+       isAddingTask === "" && (
         <button
-          onClick={() => setIsAddingTask(true)}
+          onClick={() => setIsAddingTask("title")}
           className=" text-purple-400 mt-4 hover:underline"
         >
           new Task +
