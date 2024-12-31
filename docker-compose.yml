@@ -1,4 +1,20 @@
 services:
+  traefik:
+    image: "traefik:v3.2"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+    ports:
+      - "81:80"
+      - "8081:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - app_network
+
   postgres_db:
     image: postgres:15
     container_name: postgres_db
@@ -20,9 +36,13 @@ services:
   frontend:
     build:
       context: ./front-end
-    container_name: next_app
-    ports:
-      - "3001:3000"
+    deploy:
+      replicas: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`localhost`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - app_network
     depends_on:
@@ -33,7 +53,21 @@ services:
   rails_app:
     build:
       context: ./back-end
-    container_name: rails_app
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "3.0"
+          memory: 1G
+        reservations:
+          cpus: "2.0"
+      restart_policy:
+        condition: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rails_app.rule=HostRegexp(`api.localhost`)"
+      - "traefik.http.routers.rails_app.entrypoints=web"
+      - "traefik.http.services.rails_app.loadbalancer.server.port=3000"
     environment:
       RAILS_ENV: test
       POSTGRES_HOST: ${POSTGRES_HOST}
@@ -44,17 +78,14 @@ services:
       BUNDLE_WITHOUT: ""
     volumes:
       - ./back-end:/rails:cached
-      - rails_cache:/rails/tmp/cache
-      - rails_logs:/rails/log
     networks:
       - app_network  
-    ports:
-      - "3000:3000"
     depends_on:
       postgres_db:
         condition: service_healthy
     command: >
       bash -c "
+      rm -f /rails/tmp/pids/server.pid &&
       bundle exec rails db:migrate &&
       ./bin/rails server -b 0.0.0.0"    
 
@@ -65,5 +96,3 @@ networks:
 
 volumes:
   pg_data:  
-  rails_cache:
-  rails_logs:

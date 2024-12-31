@@ -7,6 +7,7 @@
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+![Static Badge](https://img.shields.io/badge/TRAEFIK-blue?style=for-the-badge&logo=traefikproxy&logoColor=white&logoSize=amg)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 
 > ☕ App para gerenciar tarefas feito em ruby on rails  [link para demo](https://drive.google.com/file/d/1q5jYCM0sXvZ8k7ZMHQrXMLAC5ZJgBPVI/view?usp=drive_link)
@@ -36,6 +37,8 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 ```bash
    docker-compose up
 ```
+
+> não se esqueça e preencher as variaveis de ambiente
 
 ### initial settings back-end
 1. inside diretory backend
